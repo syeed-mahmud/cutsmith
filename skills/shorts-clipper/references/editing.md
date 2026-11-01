@@ -100,3 +100,6 @@ footage, music or graphics.
 
 `$SC preview "<project>" [--open]` writes `preview.html`: clips ranked by score with
 players, hooks, reasons, score bars, post copy and download links.
+It first copies text-only pick fields (`posts`, `caption`, `hashtags`, `reason`, `judge`,
+`scores`) from picks.json into clips.json and rewrites REPORT.md, so copy added after
+`render` shows up without re-rendering. Title, hook and timing changes still need `render`.

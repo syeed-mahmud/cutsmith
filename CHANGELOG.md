@@ -1,5 +1,13 @@
 # Cutsmith changelog
 
+## Unreleased
+
+### Fixed
+- `preview` now syncs text-only pick fields (`posts`, `caption`, `hashtags`, `reason`,
+  `judge`, `scores`) from picks.json into clips.json and rewrites REPORT.md, so YouTube
+  copy written by youtube-seo after `render` appears without a re-render.
+- REPORT.md now lists each clip's per-platform post copy (`posts`).
+
 ## 1.0.0 — 2026-11-01
 
 First public release of Cutsmith: three Claude Code skills in one plugin.

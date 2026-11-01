@@ -405,11 +405,66 @@ def _write_report(proj: Project, clips: list[dict], cfg: dict) -> None:
         if c.get("caption"):
             tags = " ".join(c.get("hashtags") or [])
             lines.append(f"- **Post caption:** {c['caption']} {tags}".rstrip())
+        lines += _report_posts(c.get("posts"))
         lines.append(f"- **Edit:** {c.get('jumpcuts', 0)} jump-cuts, {c.get('removed_sec', 0):.1f}s of dead air removed")
         if c.get("issues"):
             lines.append(f"- **⚠ Issues:** {', '.join(c['issues'])}")
         lines.append("")
     (proj.root / "REPORT.md").write_text("\n".join(lines), encoding="utf-8")
+
+
+def _report_posts(posts) -> list[str]:
+    """Per-platform copy (picks.json "posts") as Markdown list items for REPORT.md."""
+    lines = []
+    for platform, v in (posts or {}).items():
+        lines.append(f"- **{platform}:**")
+        if not isinstance(v, dict):
+            lines.append(f"  - {v}")
+            continue
+        for key, val in v.items():
+            if isinstance(val, list):
+                val = ", ".join(str(x) for x in val)
+            val = str(val)
+            if "\n" in val:
+                body = "\n".join(f"    {ln}" for ln in val.splitlines())
+                lines.append(f"  - {key}:\n\n    ```text\n{body}\n    ```")
+            else:
+                lines.append(f"  - {key}: {val}")
+    return lines
+
+
+# text-only pick fields that can change without re-rendering the video
+_META_FIELDS = ("posts", "caption", "hashtags", "reason", "judge", "scores")
+
+
+def _sync_metadata(proj: Project, clips: list[dict]) -> bool:
+    """Copy text-only fields from picks.json into rendered clips (matched by id).
+
+    Lets `preview` pick up post copy (e.g. youtube-seo output) added after `render`
+    without re-encoding anything. Returns True if any clip changed."""
+    path = proj.p("picks.json")
+    if not path.exists():
+        return False
+    try:
+        picks = _load_picks(path)
+    except SystemExit:
+        return False
+    cfg = CFG.load(proj.work)
+    changed = False
+    by_id = {c["id"]: c for c in clips}
+    for i, p in enumerate(picks, 1):
+        c = by_id.get(i)
+        if not c:
+            continue
+        for k in _META_FIELDS:
+            if k in p and p[k] != c.get(k):
+                c[k] = p[k]
+                changed = True
+        if c.get("judge") is not None and "signal" in c:
+            score = round(cfg["judge_weight"] * float(c["judge"]) + (1 - cfg["judge_weight"]) * c["signal"])
+            changed |= score != c.get("score")
+            c["score"] = score
+    return changed
 
 
 def cmd_board(args) -> None:
@@ -642,7 +697,11 @@ def cmd_edit_clip(args) -> None:
 def cmd_preview(args) -> None:
     import html as H
     proj = Project.find(args.project)
-    clips = sorted(load_json(proj.root / "clips.json")["clips"], key=lambda c: -c.get("score", 0))
+    data = load_json(proj.root / "clips.json")
+    if _sync_metadata(proj, data["clips"]):
+        save_json(proj.root / "clips.json", data)
+        _write_report(proj, data["clips"], CFG.load(proj.work))
+    clips = sorted(data["clips"], key=lambda c: -c.get("score", 0))
     cards = []
     for r, c in enumerate(clips, 1):
         sc = c.get("scores") or {}
