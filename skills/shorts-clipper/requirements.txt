@@ -1,0 +1,5 @@
+# shorts-clipper runtime (CPU friendly; CUDA used automatically when present)
+faster-whisper>=1.1.0
+numpy>=1.26
+opencv-python-headless>=4.9
+yt-dlp>=2025.1.1

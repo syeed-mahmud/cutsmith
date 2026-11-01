@@ -1,0 +1,12 @@
+__pycache__/
+*.pyc
+.venv/
+venv/
+*-shorts/
+.*-edit/
+*.mp4
+*.webm
+*.mkv
+*.mov
+*.wav
+.DS_Store
