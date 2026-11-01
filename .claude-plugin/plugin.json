@@ -1,6 +1,6 @@
 {
   "name": "cutsmith",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Cutsmith — AI auto shorts clipper. Turn long videos into ranked, captioned, auto-reframed 9:16 shorts locally. Claude picks the viral moments; a CPU-friendly engine (faster-whisper, OpenCV, ffmpeg) handles face tracking, active-speaker switching, jump-cuts, animated captions, hook titles and loudness. Includes youtube-seo: free keyword research and title/description/tag scoring; and social-publish: post/schedule directly to YouTube, Facebook, Instagram, LinkedIn, TikTok, Bluesky, Threads, Reddit, Telegram, Discord, Mastodon and Pinterest with your own free developer apps.",
   "author": {
     "name": "Syeed Mahmud",

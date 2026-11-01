@@ -6,14 +6,14 @@
   },
   "metadata": {
     "description": "Cutsmith — open-source Claude Code skills that turn long videos into viral-ready shorts, optimise them for YouTube and publish them.",
-    "version": "1.0.1"
+    "version": "1.0.2"
   },
   "plugins": [
     {
       "name": "cutsmith",
       "source": "./",
       "description": "Long video -> N ranked 9:16 shorts with face tracking, speaker switching, jump-cuts, animated captions and hook titles. Runs locally.",
-      "version": "1.0.1",
+      "version": "1.0.2",
       "license": "MIT",
       "keywords": [
         "video",

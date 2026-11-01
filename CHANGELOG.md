@@ -1,5 +1,12 @@
 # Cutsmith changelog
 
+## 1.0.2 — 2026-11-01
+
+### Fixed
+- social-publish: scheduled YouTube posts set to private or unlisted no longer use
+  YouTube's own scheduler (which always ends public); they are uploaded at their slot by
+  the local scheduler and keep the chosen privacy.
+
 ## 1.0.1 — 2026-11-01
 
 ### Fixed

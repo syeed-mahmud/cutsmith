@@ -93,7 +93,9 @@ def publish(entry: dict, media: Path) -> dict:
     if o.get("synthetic") is not None:
         status["containsSyntheticMedia"] = bool(o["synthetic"])
     when = entry.get("schedule")
-    if when and when != "now":
+    # YouTube's own scheduler (publishAt) always ends PUBLIC, so only use it when the user
+    # chose public; private/unlisted posts are uploaded at their slot by the local scheduler.
+    if when and when != "now" and o["privacy"] == "public":
         t = dt.datetime.fromisoformat(when.replace("Z", "+00:00"))
         if t > dt.datetime.now(dt.timezone.utc) + dt.timedelta(minutes=5):
             status.update(privacyStatus="private", publishAt=t.astimezone(dt.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"))

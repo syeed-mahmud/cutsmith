@@ -318,7 +318,8 @@ def _due(e: dict, force_now: bool) -> bool:
     if w is None or w <= now():
         return True
     mod = prov(e["platform"])
-    if e["platform"] == "youtube" or (e["platform"] == "facebook" and w > now() + dt.timedelta(minutes=11)):
+    yt_public = e["platform"] == "youtube" and e.get("options", {}).get("privacy") == "public"
+    if yt_public or (e["platform"] == "facebook" and w > now() + dt.timedelta(minutes=11)):
         return True                       # these platforms schedule natively; upload now
     return force_now
 
