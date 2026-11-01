@@ -1,6 +1,6 @@
 # Cutsmith changelog
 
-## Unreleased
+## 1.0.1 — 2026-11-01
 
 ### Fixed
 - `preview` now syncs text-only pick fields (`posts`, `caption`, `hashtags`, `reason`,
